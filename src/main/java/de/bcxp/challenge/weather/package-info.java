@@ -1,0 +1,1 @@
+package de.bcxp.challenge.weather;
