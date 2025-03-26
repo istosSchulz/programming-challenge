@@ -20,7 +20,7 @@ public class CountryService {
 	private static final String DEFAULT_LOCATION = "de/bcxp/challenge/countries.csv";
 
 	// FIXME would benefit from DI and relying on DataParser interface instead
-	private CSVDataParser<CountryModel> parser;
+	private DataParser<CountryModel> parser;
 
 	// defaults
 	private String inputFile = DEFAULT_LOCATION;

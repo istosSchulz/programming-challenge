@@ -69,7 +69,7 @@ public class CSVDataParser<T> implements DataParser<T> {
 							.getResourceAsStream(source))
 					.readAll();
 			return MAPPER.convertValue(temp, this.typeReference); // necessary workaround due to type erasure with Java Generics
-		} catch (final IOException e) {
+		} catch (final IOException | NullPointerException e) {
 			throw new InvalidDataException("Unable to import file " + source, e);
 		}
 		// @formatter:on

@@ -19,7 +19,7 @@ public class WeatherService {
 	private static final String DEFAULT_LOCATION = "de/bcxp/challenge/weather.csv";
 
 	// FIXME would benefit from DI and relying on DataParser interface instead
-	private CSVDataParser<WeatherModel> parser;
+	private DataParser<WeatherModel> parser;
 
 	// defaults
 	private String inputFile = DEFAULT_LOCATION;
