@@ -8,4 +8,8 @@ public class InvalidDataException extends RuntimeException {
 		super(message);
 	}
 
+	public InvalidDataException(final String message, final Throwable throwable) {
+		super(message, throwable);
+	}
+
 }
