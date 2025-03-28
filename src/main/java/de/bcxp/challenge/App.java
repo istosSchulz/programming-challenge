@@ -1,6 +1,6 @@
 package de.bcxp.challenge;
 
-import de.bcxp.challenge.coutry.CountryService;
+import de.bcxp.challenge.country.CountryService;
 import de.bcxp.challenge.weather.WeatherService;
 
 /**
@@ -20,7 +20,7 @@ public final class App {
     	WeatherService weatherService = new WeatherService();
     	CountryService countryService = new CountryService(); 
 
-        String dayWithSmallestTempSpread = String.valueOf(weatherService.dayWithSmallestTemperatureSpread());     // Your day analysis function call …
+        String dayWithSmallestTempSpread = weatherService.dayWithSmallestTemperatureSpread();     // Your day analysis function call …
         System.out.printf("Day with smallest temperature spread: %s%n", dayWithSmallestTempSpread);
 
         String countryWithHighestPopulationDensity = countryService.countryWithHighestPopulationDensity(); // Your population density analysis function call …

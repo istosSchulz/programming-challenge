@@ -1,4 +1,4 @@
-package de.bcxp.challenge.weather;
+package de.bcxp.challenge.country;
 
 import java.util.Comparator;
 import java.util.List;
@@ -14,44 +14,44 @@ import de.bcxp.challenge.common.InvalidDataException;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class WeatherService {
+public class CountryService {
 
-	private static final String DEFAULT_LOCATION = "de/bcxp/challenge/weather.csv";
+	private static final String DEFAULT_LOCATION = "de/bcxp/challenge/countries.csv";
 
 	// FIXME would benefit from DI and relying on DataParser interface instead
-	private DataParser<WeatherModel> parser;
+	private DataParser<CountryModel> parser;
 
 	// defaults
 	private String inputFile = DEFAULT_LOCATION;
 	private final CsvSchema schema = CsvSchema.emptySchema()
-		.withUseHeader(true);
+		.withUseHeader(true)
+		.withColumnSeparator(';');
 
-	public WeatherService(final String inputFile) {
+	public CountryService(final String inputFile) {
 		this.inputFile = Objects.toString(inputFile, DEFAULT_LOCATION);
 	}
 
 	/**
-	 * Reads the weather data input file from classpath and calculates the minimal
-	 * temperature spread within the parsed dataset. Skips semantically invalid
-	 * import entries.
+	 * Reads the country data input file from classpath and determines the country
+	 * with the highest population density within the parsed data set. Skips
+	 * semantically invalid import entries.
 	 *
-	 * @return The index of the day with the minimal temperature spread within the
-	 *         imported dataset expressed in the range between 1 and 31.</br>
+	 * @return The name of the country with the highest population density within
+	 *         the imported dataset.</br>
 	 *         </br>
 	 *         <b>"error"</b> in case of any error happening like an empty data set
 	 *         was imported. This can be the case if there isn't any data provided
 	 *         within the input or all the imported entries are skipped due to
 	 *         validation errors. Also see {@link CSVDataParser#parseData(String).}
 	 */
-	public String dayWithSmallestTemperatureSpread() {
+	public String countryWithHighestPopulationDensity() {
 		try {
 			return getParser().parseData(this.inputFile) // TODO data loading can be done once and cached
 				.stream()
-				.filter(WeatherModel::isValid)
-				.min(Comparator.comparingDouble(WeatherModel::getTemperatureSpread))
-				.map(WeatherModel::getDay)
-				.map(String::valueOf) // FIXME clumsy choice of return type due to error-support && existing app
-				.orElseThrow(() -> new InvalidDataException("Minimal temperature spread could not be calculated"));
+				.filter(CountryModel::isValid)
+				.max(Comparator.comparingDouble(CountryModel::getPopulationDensity))
+				.map(CountryModel::getCountryName)
+				.orElseThrow(() -> new InvalidDataException("Maximum population density could not be calculated"));
 		} catch (final InvalidDataException e) {
 			System.err.println(e.getMessage());
 			return "error"; // FIXME clumsy choice, exit codes would be better
@@ -64,9 +64,9 @@ public class WeatherService {
 	 * @return The {@link DataParser} to use.
 	 */
 	// accessible for test reasons
-	DataParser<WeatherModel> getParser() {
+	DataParser<CountryModel> getParser() {
 		if (this.parser == null) {
-			this.parser = new CSVDataParser<>(DataType.WEATHER, this.schema, new TypeReference<List<WeatherModel>>() {
+			this.parser = new CSVDataParser<>(DataType.COUNTRY, this.schema, new TypeReference<List<CountryModel>>() {
 			});
 		}
 		return this.parser;

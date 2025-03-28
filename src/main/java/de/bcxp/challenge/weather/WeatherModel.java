@@ -51,32 +51,58 @@ class WeatherModel {
 	@JsonProperty("R AvSLP") // FIXME most likely a typo with the prev. column "MnR,AvSLP"
 	private double averageSeaLevelPressure;
 
+	/**
+	 * Calculates the temperature spread by {@link #getMaxTemperature()} -
+	 * {@link #getMinTemperature()}.
+	 *
+	 * @return The temperature spread of this weather date
+	 * @throws {@link
+	 *             InvalidDataException} in case {@link #getMaxTemperature()} <
+	 *             {@link #getMinTemperature()} or those aren't set
+	 */
 	@JsonIgnore
 	public double getTemperatureSpread() {
-		if (!isValid()) {
-			throw new InvalidDataException(
-					"Invalid data to calculate temperature spread on. Must have 0 < 'Day' < 32 and 'MnT' < 'MxT'");
+		if (!hasValidTemperatures() || !hasValidTemperatureBoundaries()) {
+			throw new InvalidDataException("Invalid data to calculate temperature spread on. Must have 'MnT' < 'MxT'");
 		}
 		return Math.abs(getMaxTemperature() - getMinTemperature());
 	}
 
+	/**
+	 * Validating the WeatherModel by mandatory fields Day, Mxt and MnT and ranges 1
+	 * <= Day <= 31, MnT <= MxT.
+	 *
+	 * @return true if restrictions are met.
+	 */
 	@JsonIgnore
 	public boolean isValid() {
-		if (getMaxTemperature() == null || getMinTemperature() == null) {
-			System.out.println(
+		if (!hasValidTemperatures()) {
+			System.err.println(
 					"Filtered out input entry. At least one of the mandatory fields 'MxT' and 'MnT' were missing. See: "
 							+ toString());
 			return false;
 		}
-		if (getDay() < 1 || getDay() > 31) {
-			System.out.println("Filtered out input entry. 'Day' must be between 1 and 31. See: " + toString());
+		if (!hasValidDay()) {
+			System.err.println("Filtered out input entry. 'Day' must be between 1 and 31. See: " + toString());
 			return false;
 		}
-		if (getMaxTemperature() < getMinTemperature()) {
-			System.out.println("Filtered out input entry. 'MnT' must not be greater than 'MxT'. See: " + toString());
+		if (!hasValidTemperatureBoundaries()) {
+			System.err.println("Filtered out input entry. 'MnT' must not be greater than 'MxT'. See: " + toString());
 			return false;
 		}
 		return true;
+	}
+
+	private boolean hasValidTemperatureBoundaries() {
+		return getMinTemperature() <= getMaxTemperature();
+	}
+
+	private boolean hasValidDay() {
+		return 1 <= getDay() && getDay() <= 31;
+	}
+
+	private boolean hasValidTemperatures() {
+		return getMaxTemperature() != null && getMinTemperature() != null;
 	}
 
 }

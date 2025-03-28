@@ -1,7 +1,6 @@
-package de.bcxp.challenge.coutry;
+package de.bcxp.challenge.country;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import de.bcxp.challenge.common.DataParser;
-import de.bcxp.challenge.common.InvalidDataException;
 
 class CountryServiceTest {
 
@@ -50,10 +48,10 @@ class CountryServiceTest {
 	void testCountryWithHighestPopulationDensity_WithEmptyList() {
 		// given
 		when(this.parser.parseData(Mockito.anyString())).thenReturn(List.of());
-
 		// when
+		final String result = this.underTest.countryWithHighestPopulationDensity();
 		// then
-		assertThrows(InvalidDataException.class, () -> this.underTest.countryWithHighestPopulationDensity());
+		assertEquals("error", result);
 	}
 
 	@Test
@@ -61,10 +59,10 @@ class CountryServiceTest {
 		// given
 		final CountryModel c1 = mockData("country1", 10, 0);
 		when(this.parser.parseData(Mockito.anyString())).thenReturn(List.of(c1));
-
 		// when
+		final String result = this.underTest.countryWithHighestPopulationDensity();
 		// then
-		assertThrows(InvalidDataException.class, () -> this.underTest.countryWithHighestPopulationDensity());
+		assertEquals("error", result);
 	}
 
 	@Test
@@ -72,10 +70,10 @@ class CountryServiceTest {
 		// given
 		final CountryModel c1 = mockData("country1", 10, -10);
 		when(this.parser.parseData(Mockito.anyString())).thenReturn(List.of(c1));
-
 		// when
+		final String result = this.underTest.countryWithHighestPopulationDensity();
 		// then
-		assertThrows(InvalidDataException.class, () -> this.underTest.countryWithHighestPopulationDensity());
+		assertEquals("error", result);
 	}
 
 	@Test
@@ -83,10 +81,10 @@ class CountryServiceTest {
 		// given
 		final CountryModel c1 = mockData("country1", -10, 10);
 		when(this.parser.parseData(Mockito.anyString())).thenReturn(List.of(c1));
-
 		// when
+		final String result = this.underTest.countryWithHighestPopulationDensity();
 		// then
-		assertThrows(InvalidDataException.class, () -> this.underTest.countryWithHighestPopulationDensity());
+		assertEquals("error", result);
 	}
 
 	@Test
@@ -94,10 +92,10 @@ class CountryServiceTest {
 		// given
 		final CountryModel c1 = mockData(null, 10, 100);
 		when(this.parser.parseData(Mockito.anyString())).thenReturn(List.of(c1));
-
 		// when
+		final String result = this.underTest.countryWithHighestPopulationDensity();
 		// then
-		assertThrows(InvalidDataException.class, () -> this.underTest.countryWithHighestPopulationDensity());
+		assertEquals("error", result);
 	}
 
 	// FIXME for more sophisticated test cases ObjectMother would be appropriate
